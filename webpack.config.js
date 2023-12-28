@@ -37,13 +37,6 @@ module.exports = {
           },
         },
       },
-      {
-        test: /\.css$/i,
-        use: ['style-loader', 'css-loader']
-      },
     ],
-  },
-  "scripts": {
-    "start": "webpack serve --mode development --open"
   },
 };
