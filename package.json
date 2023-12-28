@@ -18,6 +18,13 @@
   "engines": {
     "node": "20"
   },
+  "browserslist": [
+    "last 2 versions",
+    "not dead",
+    "not ie <= 11",
+    "not op_mini all",
+    "not < 0.25%"
+  ],
   "scripts": {
     "lint": "eslint src/",
     "start": "webpack serve --mode development --open",
