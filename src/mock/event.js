@@ -2,14 +2,13 @@ import { EVENTS } from '../const.js';
 import { getRandomElement } from '../util.js';
 
 const mockEvents = [{
-  palce: 'Monaco',
+  place: 'Monaco',
   day: new Date('2024-03-02'),
   type: getRandomElement(EVENTS),
   startTime: '10:30',
   finishTime: '11:50',
   price: 20,
-  offers: ['Order Something', 'Guaranty'],
-  offersPrice: [getRandomElement([10, 20, 50, 75, 100,]), getRandomElement([10, 20, 50, 75, 100,])],
+  offersId: [1, 2],
   isFavourite: false,
   destination: {
     hasDestination: true,
@@ -18,14 +17,13 @@ const mockEvents = [{
   }
 },
 {
-  palce: 'Italy',
+  place: 'Italy',
   day: new Date('2024-04-14'),
   type: getRandomElement(EVENTS),
   startTime: '8:30',
   finishTime: '10:30',
   price: 6320,
-  offers: ['Order Something', 'Guaranty'],
-  offersPrice: [getRandomElement([10, 20, 50, 75, 100,]), getRandomElement([10, 20, 50, 75, 100,])],
+  offersId: [3, 4],
   isFavourite: true,
   destination: {
     hasDestination: true,
@@ -34,14 +32,27 @@ const mockEvents = [{
   }
 },
 {
-  palce: 'Germany',
+  place: 'Germany',
   day: new Date('2024-04-14'),
   type: getRandomElement(EVENTS),
   startTime: '12:00',
   finishTime: '18:20',
   price: 6320,
-  offers: ['Order Something', 'Guaranty'],
-  offersPrice: [getRandomElement([10, 20, 50, 75, 100,]), getRandomElement([10, 20, 50, 75, 100,])],
+  offersId: [5, 6],
+  isFavourite: false,
+  destination: {
+    hasDestination: false,
+    text: '',
+    photo: 0
+  }
+},
+{
+  place: 'Chamonix',
+  day: new Date('2024-08-18'),
+  type: getRandomElement(EVENTS),
+  startTime: '10:00',
+  finishTime: '22:20',
+  price: 785,
   isFavourite: false,
   destination: {
     hasDestination: false,
@@ -50,7 +61,49 @@ const mockEvents = [{
   }
 }];
 
+const mockOffers = [{
+  id: 1,
+  text: 'Rent a car',
+  price: 200,
+  isChecked: true
+},
+{
+  id: 2,
+  text: 'Add breakfast',
+  price: 50,
+  isChecked: false
+},
+{
+  id: 3,
+  text: 'Book tickets',
+  price: 40,
+  isChecked: true
+},
+{
+  id: 4,
+  text: 'Lunch in city',
+  price: 70,
+  isChecked: false
+},
+{
+  id: 5,
+  text: 'Add luggage',
+  price: 100,
+  isChecked: false
+},
+{
+  id: 6,
+  text: 'Switch to comfort',
+  price: 100,
+  isChecked: false
+}];
+
 function getRandomEvent() {
   return getRandomElement(mockEvents);
 }
-export {getRandomEvent};
+
+function getOfferById(offerId) {
+  return mockOffers.filter((el) => el.id === offerId);
+}
+
+export {getRandomEvent, getOfferById};
