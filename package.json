@@ -29,5 +29,8 @@
     "lint": "eslint src/",
     "start": "webpack serve --mode development --open",
     "build": "webpack --mode production"
+  },
+  "dependencies": {
+    "dayjs": "1.11.10"
   }
 }
