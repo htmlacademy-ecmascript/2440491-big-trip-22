@@ -1,7 +1,7 @@
 import NewPointView from '../view/point-view.js';
 import EventFormView from '../view/form-create-view.js';
 import SortView from '../view/form-sort-view.js';
-import { render } from '../render.js';
+import { render } from '../framework/render.js';
 
 export default class TravelPresenter {
   constructor({travelContainer, eventModel}) {

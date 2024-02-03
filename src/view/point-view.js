@@ -1,4 +1,5 @@
-import { createElement } from '../render';
+import { createElement } from '../framework/render.js';
+import AbstractView from '../framework/view/abstract-view.js';
 import { humanizeTravelDate, subtractDates } from '../util';
 
 function createNewPoint(event) {
@@ -51,24 +52,24 @@ function createNewPoint(event) {
 </li>`);
 }
 
-export default class NewPointView {
+export default class NewPointView extends AbstractView {
+  #element = null;
+  #event = null;
+
   constructor({event}) {
-    this.event = event;
+    super();
+    this.#event = event;
   }
 
-  getTemplate() {
-    return createNewPoint(this.event);
+  get template() {
+    return createNewPoint(this.#event);
   }
 
-  getElement() {
-    if (!this.element) {
-      this.element = createElement(this.getTemplate());
+  get element() {
+    if (!this.#element) {
+      this.#element = createElement(this.template);
     }
-    return this.element;
-  }
-
-  removeElement() {
-    this.element = null;
+    return this.#element;
   }
 }
 
