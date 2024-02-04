@@ -1,13 +1,17 @@
-import { getRandomEvent, getOfferById } from '../mock/event.js';
+import { mockEvents, mockOffers} from '../mock/event.js';
+import { getRandomElement } from '../util.js';
 
 const EVENT_COUNT = 3;
 
 export default class EventModel {
-  createEventModel() {
-    const currentEvent = getRandomEvent();
-    const currentOffers = currentEvent.offersId ? currentEvent.offersId.map((offerId) => getOfferById(offerId)) : 0;
-    return [currentEvent, currentOffers];
+  #getRandomEvent() {
+    return getRandomElement(mockEvents);
   }
+
+  createEventModel = () => {
+    const currentEvent = this.#getRandomEvent();
+    return [currentEvent, mockOffers];
+  };
 
   events = Array.from({length: EVENT_COUNT}, this.createEventModel);
 

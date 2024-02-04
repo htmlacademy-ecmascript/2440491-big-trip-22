@@ -13,7 +13,7 @@ const mockEvents = [{
   destination: {
     hasDestination: true,
     text: 'Geneva is a city in Switzerland that lies at the southern tip of expansive Lac Léman (Lake Geneva). Surrounded by the Alps and Jura mountains, the city has views of dramatic Mont Blanc.',
-    photo: 5
+    photo: [1, 3, 5]
   }
 },
 {
@@ -28,7 +28,7 @@ const mockEvents = [{
   destination: {
     hasDestination: true,
     text: 'Geneva is a city in Switzerland that lies at the southern tip of expansive Lac Léman (Lake Geneva). Surrounded by the Alps and Jura mountains, the city has views of dramatic Mont Blanc.',
-    photo: 5
+    photo: [1, 5, 2]
   }
 },
 {
@@ -57,7 +57,7 @@ const mockEvents = [{
   destination: {
     hasDestination: false,
     text: '',
-    photo: 0
+    photo: [1, 2, 5, 3, 4]
   }
 }];
 
@@ -98,12 +98,5 @@ const mockOffers = [{
   isChecked: false
 }];
 
-function getRandomEvent() {
-  return getRandomElement(mockEvents);
-}
 
-function getOfferById(offerId) {
-  return mockOffers.filter((el) => el.id === offerId);
-}
-
-export {getRandomEvent, getOfferById};
+export {mockEvents, mockOffers};
