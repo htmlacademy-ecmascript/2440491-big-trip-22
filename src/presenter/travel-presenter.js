@@ -1,7 +1,7 @@
 import NewPointView from '../view/point-view.js';
 import EventFormView from '../view/form-create-view.js';
 import SortView from '../view/form-sort-view.js';
-import { render } from '../render.js';
+import { render, replace } from '../framework/render.js';
 
 export default class TravelPresenter {
   constructor({travelContainer, eventModel}) {
@@ -11,11 +11,50 @@ export default class TravelPresenter {
 
   init() {
     this.travelEvents = [...this.eventModel.getEvents()];
-    // Отрисовка блоков
+    this.#renderAll();
+  }
+
+  /** Функция для отрисовки всех компонентов */
+  #renderAll() {
     render(new SortView(), this.travelContainer);
-    render(new EventFormView(), this.travelContainer);
+
     for (let i = 0; i < this.travelEvents.length; i++) {
-      render(new NewPointView({event: this.travelEvents[i]}), this.travelContainer);
+      this.#renderPoints(this.travelEvents[i]);
     }
+  }
+
+  #renderPoints(point) {
+    const escKeyDownHandler = (evt) => {
+      if (evt.key === 'Escape') {
+        evt.preventDefault();
+        replaceFormToPoint();
+        document.removeEventListener('keydown', escKeyDownHandler);
+      }
+    };
+    const pointComponent = new NewPointView({
+      event: point,
+      callback: () => {
+        replacePointToForm();
+        document.addEventListener('keydown', escKeyDownHandler);
+      }
+    });
+
+    const editPointComponent = new EventFormView({
+      event: point,
+      callback: () => {
+        replaceFormToPoint();
+        document.removeEventListener('keydown', escKeyDownHandler);
+      }
+    });
+
+    function replacePointToForm() {
+      replace(editPointComponent, pointComponent);
+    }
+
+    function replaceFormToPoint() {
+      replace(pointComponent, editPointComponent);
+    }
+
+    render(pointComponent, this.travelContainer);
   }
 }

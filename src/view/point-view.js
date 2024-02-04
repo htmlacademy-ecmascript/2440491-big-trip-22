@@ -1,11 +1,16 @@
-import { createElement } from '../render';
+import { createElement } from '../framework/render.js';
+import AbstractView from '../framework/view/abstract-view.js';
 import { humanizeTravelDate, subtractDates } from '../util';
 
 function createNewPoint(event) {
   const travelPoint = event[0];
-  const pointOffers = event[1];
+  const offers = event[1];
   const {day, type, place, startTime, finishTime, price, isFavourite} = travelPoint;
   const offerEls = [];
+  function getOfferById(offerId) {
+    return offers.filter((el) => el.id === offerId);
+  }
+  const pointOffers = travelPoint.offersId ? travelPoint.offersId.map((offerId) => getOfferById(offerId)) : 0;
   if (pointOffers !== 0) {
     pointOffers.forEach((el) => {
       offerEls.push(`<li class="event__offer">
@@ -51,24 +56,32 @@ function createNewPoint(event) {
 </li>`);
 }
 
-export default class NewPointView {
-  constructor({event}) {
-    this.event = event;
+export default class NewPointView extends AbstractView {
+  #element = null;
+  #event = null;
+  #callback = null;
+
+  constructor({event, callback}) {
+    super();
+    this.#event = event;
+    this.#callback = callback;
+    this.element.querySelector('.event__rollup-btn').addEventListener('click', this.#OnClick);
   }
 
-  getTemplate() {
-    return createNewPoint(this.event);
+  get template() {
+    return createNewPoint(this.#event);
   }
 
-  getElement() {
-    if (!this.element) {
-      this.element = createElement(this.getTemplate());
+  get element() {
+    if (!this.#element) {
+      this.#element = createElement(this.template);
     }
-    return this.element;
+    return this.#element;
   }
 
-  removeElement() {
-    this.element = null;
-  }
+  #OnClick = (evt) => {
+    evt.preventDefault();
+    this.#callback();
+  };
 }
 
