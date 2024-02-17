@@ -1,10 +1,11 @@
 import { createElement } from '../framework/render.js';
 import AbstractView from '../framework/view/abstract-view.js';
+import { toEditTime } from '../util/point.js';
 
 function createEventTemplate(event) {
   const travelPoint = event[0];
   const offers = event[1];
-  const { type, place, destination, startTime, finishTime, price } = travelPoint;
+  const {day, type, place, destination, startTime, finishTime, price } = travelPoint;
   const offerEls = [];
   offers.forEach((el) => {
     const uniqueId = el.text.split(' ').at(-1);
@@ -105,10 +106,10 @@ function createEventTemplate(event) {
 
       <div class="event__field-group  event__field-group--time">
         <label class="visually-hidden" for="event-start-time-1">From</label>
-        <input class="event__input  event__input--time" id="event-start-time-1" type="text" name="event-start-time" value="${startTime}">
+        <input class="event__input  event__input--time" id="event-start-time-1" type="text" name="event-start-time" value="${toEditTime(day).slice(0, -5) + startTime}">
         &mdash;
         <label class="visually-hidden" for="event-end-time-1">To</label>
-        <input class="event__input  event__input--time" id="event-end-time-1" type="text" name="event-end-time" value="${finishTime}">
+        <input class="event__input  event__input--time" id="event-end-time-1" type="text" name="event-end-time" value="${toEditTime(day).slice(0, -5) + finishTime}">
       </div>
 
       <div class="event__field-group  event__field-group--price">

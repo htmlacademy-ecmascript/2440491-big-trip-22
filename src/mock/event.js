@@ -1,5 +1,6 @@
 import { EVENTS } from '../const.js';
-import { getRandomElement } from '../util.js';
+import { getRandomElement } from '../util/common.js';
+
 
 const mockEvents = [{
   place: 'Monaco',

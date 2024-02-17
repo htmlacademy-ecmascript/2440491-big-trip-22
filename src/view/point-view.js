@@ -1,6 +1,6 @@
 import { createElement } from '../framework/render.js';
 import AbstractView from '../framework/view/abstract-view.js';
-import { humanizeTravelDate, subtractDates } from '../util';
+import { humanizeTravelDate, subtractDates } from '../util/point.js';
 
 function createNewPoint(event) {
   const travelPoint = event[0];
@@ -65,7 +65,8 @@ export default class NewPointView extends AbstractView {
     super();
     this.#event = event;
     this.#callback = callback;
-    this.element.querySelector('.event__rollup-btn').addEventListener('click', this.#OnClick);
+    this.element.querySelector('.event__rollup-btn').addEventListener('click', this.#RollupOnClick);
+    this.element.querySelector('.event__favorite-btn').addEventListener('click', this.#FavoriteOnClick);
   }
 
   get template() {
@@ -79,9 +80,13 @@ export default class NewPointView extends AbstractView {
     return this.#element;
   }
 
-  #OnClick = (evt) => {
+  #RollupOnClick = (evt) => {
     evt.preventDefault();
     this.#callback();
+  };
+
+  #FavoriteOnClick = (evt) => {
+    evt.preventDefault();
   };
 }
 
