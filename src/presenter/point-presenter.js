@@ -5,7 +5,7 @@ import { remove, render, replace } from '../framework/render.js';
 const Mode = {
   DEFAULT: 'DEFAULT',
   EDITING: 'EDITING'
-}
+};
 export default class PointPresenter {
   #travelContainer = null;
   #handleDataChange = null;
