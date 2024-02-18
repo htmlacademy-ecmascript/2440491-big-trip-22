@@ -13,7 +13,7 @@ export default class TravelPresenter {
   #travelContainer = null;
   #eventModel = null;
 
-  #sortComponent = new SortView();
+  #sortComponent = null;
   #noPointsComponent = new NoPointView({filterText: 'Everything'});
   #pointListView = new PointListView();
   #filterView = new FilterView();
@@ -39,8 +39,14 @@ export default class TravelPresenter {
       this.#renderNoPoints();
       return;
     }
-    render(this.#sortComponent, this.#travelContainer);
+    this.#renderSort();
     this.#renderPoints();
+  }
+
+  #renderSort() {
+    this.#sortComponent = new SortView({
+      onSortTypeChange: this.#handleSortTypeChange()
+    });
   }
 
   #handlePointChange = (updatedPoint) => {
@@ -69,4 +75,8 @@ export default class TravelPresenter {
     pointPresenter.init(point);
     this.#pointPresenters.set(point[0].id, pointPresenter);
   }
+
+  #handleSortTypeChange = () => {
+
+  };
 }
