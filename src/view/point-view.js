@@ -6,7 +6,6 @@ function createNewPoint(event) {
   const travelPoint = event[0];
   const offers = event[1];
   const {day, type, place, startTime, finishTime, price, isFavorite} = travelPoint;
-  console.log(isFavorite);
   const offerEls = [];
   function getOfferById(offerId) {
     return offers.filter((el) => el.id === offerId);

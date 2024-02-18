@@ -48,6 +48,10 @@ export default class TravelPresenter {
     this.#pointPresenters.get(updatedPoint[0].id).init(updatedPoint);
   };
 
+  #handleModeChange = () => {
+    this.#pointPresenters.forEach((el) => el.resetView());
+  };
+
   #renderNoPoints() {
     render(this.#noPointsComponent, this.#travelContainer);
   }
@@ -59,7 +63,8 @@ export default class TravelPresenter {
   #renderPoint(point) {
     const pointPresenter = new PointPresenter({
       travelContainer: this.#travelContainer,
-      onDataChange: this.#handlePointChange
+      onDataChange: this.#handlePointChange,
+      onModeChange: this.#handleModeChange
     });
     pointPresenter.init(point);
     this.#pointPresenters.set(point[0].id, pointPresenter);

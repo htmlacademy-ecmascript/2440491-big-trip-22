@@ -2,18 +2,25 @@ import NewPointView from '../view/point-view.js';
 import EventFormView from '../view/form-create-view.js';
 import { remove, render, replace } from '../framework/render.js';
 
+const Mode = {
+  DEFAULT: 'DEFAULT',
+  EDITING: 'EDITING'
+}
 export default class PointPresenter {
   #travelContainer = null;
   #handleDataChange = null;
+  #handleModeChange = null;
 
   #pointComponent = null;
   #editPointComponent = null;
 
   #point = null;
+  #mode = Mode.DEFAULT;
 
-  constructor({travelContainer, onDataChange}) {
+  constructor({travelContainer, onDataChange, onModeChange}) {
     this.#travelContainer = travelContainer;
     this.#handleDataChange = onDataChange;
+    this.#handleModeChange = onModeChange;
   }
 
   init(point) {
@@ -37,16 +44,22 @@ export default class PointPresenter {
       return;
     }
 
-    if (this.#travelContainer.contains(prevPointComponent.element)) {
+    if (this.#mode === Mode.DEFAULT) {
       replace(this.#pointComponent, prevPointComponent);
     }
 
-    if (this.#travelContainer.contains(prevEditPointComponent.element)) {
+    if (this.#mode === Mode.EDITING) {
       replace(this.#editPointComponent, prevEditPointComponent);
     }
 
     remove(prevPointComponent);
     remove(prevEditPointComponent);
+  }
+
+  resetView() {
+    if (this.#mode === Mode.EDITING) {
+      this.#replaceFormToPoint();
+    }
   }
 
   destroy() {
@@ -64,10 +77,13 @@ export default class PointPresenter {
 
   #replacePointToForm() {
     replace(this.#editPointComponent, this.#pointComponent);
+    this.#handleModeChange();
+    this.#mode = Mode.EDITING;
   }
 
   #replaceFormToPoint() {
     replace(this.#pointComponent, this.#editPointComponent);
+    this.#mode = Mode.DEFAULT;
   }
 
   #handleFavoriteClick = () => {
