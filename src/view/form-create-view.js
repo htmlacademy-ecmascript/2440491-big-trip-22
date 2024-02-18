@@ -176,6 +176,6 @@ export default class EventFormView extends AbstractView {
 
   #OnSubmit = (evt) => {
     evt.preventDefault();
-    this.#callback();
+    this.#callback(this.#element);
   };
 }
