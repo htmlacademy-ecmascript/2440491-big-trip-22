@@ -1,11 +1,11 @@
 import { createElement } from '../framework/render.js';
 import AbstractView from '../framework/view/abstract-view.js';
-import { humanizeTravelDate, subtractDates } from '../util';
+import { humanizeTravelDate, subtractDates } from '../util/point.js';
 
 function createNewPoint(event) {
   const travelPoint = event[0];
   const offers = event[1];
-  const {day, type, place, startTime, finishTime, price, isFavourite} = travelPoint;
+  const {day, type, place, startTime, finishTime, price, isFavorite} = travelPoint;
   const offerEls = [];
   function getOfferById(offerId) {
     return offers.filter((el) => el.id === offerId);
@@ -43,7 +43,7 @@ function createNewPoint(event) {
     <ul class="event__selected-offers">
     ${offerEls.join('')}
     </ul>
-    <button class="event__favorite-btn ${isFavourite ? 'event__favorite-btn--active' : ''}" type="button">
+    <button class="event__favorite-btn ${isFavorite ? 'event__favorite-btn--active' : ''}" type="button">
       <span class="visually-hidden">Add to favorite</span>
       <svg class="event__favorite-icon" width="28" height="28" viewBox="0 0 28 28">
         <path d="M14 21l-8.22899 4.3262 1.57159-9.1631L.685209 9.67376 9.8855 8.33688 14 0l4.1145 8.33688 9.2003 1.33688-6.6574 6.48934 1.5716 9.1631L14 21z"/>
@@ -61,11 +61,15 @@ export default class NewPointView extends AbstractView {
   #event = null;
   #callback = null;
 
-  constructor({event, callback}) {
+  #handleFavoriteClick = null;
+
+  constructor({event, callback, onFavoriteClick}) {
     super();
     this.#event = event;
     this.#callback = callback;
-    this.element.querySelector('.event__rollup-btn').addEventListener('click', this.#OnClick);
+    this.#handleFavoriteClick = onFavoriteClick;
+    this.element.querySelector('.event__rollup-btn').addEventListener('click', this.#RollupOnClick);
+    this.element.querySelector('.event__favorite-btn').addEventListener('click', this.#FavoriteOnClick);
   }
 
   get template() {
@@ -79,9 +83,14 @@ export default class NewPointView extends AbstractView {
     return this.#element;
   }
 
-  #OnClick = (evt) => {
+  #RollupOnClick = (evt) => {
     evt.preventDefault();
     this.#callback();
+  };
+
+  #FavoriteOnClick = (evt) => {
+    evt.preventDefault();
+    this.#handleFavoriteClick();
   };
 }
 

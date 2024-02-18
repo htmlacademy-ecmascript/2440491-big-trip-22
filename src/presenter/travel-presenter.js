@@ -1,60 +1,72 @@
-import NewPointView from '../view/point-view.js';
-import EventFormView from '../view/form-create-view.js';
 import SortView from '../view/form-sort-view.js';
-import { render, replace } from '../framework/render.js';
+import { render } from '../framework/render.js';
+import PointPresenter from './point-presenter.js';
+import NoPointView from '../view/no-point-view.js';
+import FilterView from '../view/form-filter-view.js';
+import PointListView from '../view/points-list-view.js';
+import { updateItem } from '../util/common.js';
 
 export default class TravelPresenter {
-  constructor({travelContainer, eventModel}) {
-    this.travelContainer = travelContainer;
-    this.eventModel = eventModel;
+  #siteMain = document.querySelector('.trip-events');
+  #filterSection = document.querySelector('.trip-controls__filters');
+
+  #travelContainer = null;
+  #eventModel = null;
+
+  #sortComponent = new SortView();
+  #noPointsComponent = new NoPointView({filterText: 'Everything'});
+  #pointListView = new PointListView();
+  #filterView = new FilterView();
+
+  #travelEvents = [];
+  #pointPresenters = new Map();
+
+  constructor(eventModel) {
+    this.#eventModel = eventModel;
   }
 
   init() {
-    this.travelEvents = [...this.eventModel.getEvents()];
-    this.#renderAll();
+    render(this.#pointListView, this.#siteMain);
+    render(this.#filterView, this.#filterSection);
+    this.#travelEvents = [...this.#eventModel.getEvents()];
+    this.#travelContainer = document.querySelector('.trip-events__list');
+    this.#renderList();
   }
 
   /** Функция для отрисовки всех компонентов */
-  #renderAll() {
-    render(new SortView(), this.travelContainer);
-
-    for (let i = 0; i < this.travelEvents.length; i++) {
-      this.#renderPoints(this.travelEvents[i]);
+  #renderList() {
+    if (this.#travelEvents === null) {
+      this.#renderNoPoints();
+      return;
     }
+    render(this.#sortComponent, this.#travelContainer);
+    this.#renderPoints();
   }
 
-  #renderPoints(point) {
-    const escKeyDownHandler = (evt) => {
-      if (evt.key === 'Escape') {
-        evt.preventDefault();
-        replaceFormToPoint();
-        document.removeEventListener('keydown', escKeyDownHandler);
-      }
-    };
-    const pointComponent = new NewPointView({
-      event: point,
-      callback: () => {
-        replacePointToForm();
-        document.addEventListener('keydown', escKeyDownHandler);
-      }
+  #handlePointChange = (updatedPoint) => {
+    this.#travelEvents = updateItem(this.#travelEvents, updatedPoint);
+    this.#pointPresenters.get(updatedPoint[0].id).init(updatedPoint);
+  };
+
+  #handleModeChange = () => {
+    this.#pointPresenters.forEach((el) => el.resetView());
+  };
+
+  #renderNoPoints() {
+    render(this.#noPointsComponent, this.#travelContainer);
+  }
+
+  #renderPoints() {
+    this.#travelEvents.forEach((el) => this.#renderPoint(el));
+  }
+
+  #renderPoint(point) {
+    const pointPresenter = new PointPresenter({
+      travelContainer: this.#travelContainer,
+      onDataChange: this.#handlePointChange,
+      onModeChange: this.#handleModeChange
     });
-
-    const editPointComponent = new EventFormView({
-      event: point,
-      callback: () => {
-        replaceFormToPoint();
-        document.removeEventListener('keydown', escKeyDownHandler);
-      }
-    });
-
-    function replacePointToForm() {
-      replace(editPointComponent, pointComponent);
-    }
-
-    function replaceFormToPoint() {
-      replace(pointComponent, editPointComponent);
-    }
-
-    render(pointComponent, this.travelContainer);
+    pointPresenter.init(point);
+    this.#pointPresenters.set(point[0].id, pointPresenter);
   }
 }

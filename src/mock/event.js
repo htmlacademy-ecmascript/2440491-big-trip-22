@@ -1,5 +1,6 @@
 import { EVENTS } from '../const.js';
-import { getRandomElement } from '../util.js';
+import { getRandomElement } from '../util/common.js';
+
 
 const mockEvents = [{
   place: 'Monaco',
@@ -9,7 +10,7 @@ const mockEvents = [{
   finishTime: '11:50',
   price: 20,
   offersId: [1, 2],
-  isFavourite: false,
+  isFavorite: false,
   destination: {
     hasDestination: true,
     text: 'Geneva is a city in Switzerland that lies at the southern tip of expansive Lac Léman (Lake Geneva). Surrounded by the Alps and Jura mountains, the city has views of dramatic Mont Blanc.',
@@ -24,7 +25,7 @@ const mockEvents = [{
   finishTime: '10:30',
   price: 6320,
   offersId: [3, 4],
-  isFavourite: true,
+  isFavorite: true,
   destination: {
     hasDestination: true,
     text: 'Geneva is a city in Switzerland that lies at the southern tip of expansive Lac Léman (Lake Geneva). Surrounded by the Alps and Jura mountains, the city has views of dramatic Mont Blanc.',
@@ -39,7 +40,7 @@ const mockEvents = [{
   finishTime: '18:20',
   price: 6320,
   offersId: [5, 6],
-  isFavourite: false,
+  isFavorite: false,
   destination: {
     hasDestination: false,
     text: '',
@@ -53,7 +54,7 @@ const mockEvents = [{
   startTime: '10:00',
   finishTime: '22:20',
   price: 785,
-  isFavourite: false,
+  isFavorite: false,
   destination: {
     hasDestination: false,
     text: '',
