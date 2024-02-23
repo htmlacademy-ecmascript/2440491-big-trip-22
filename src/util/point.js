@@ -34,4 +34,35 @@ function subtractDates(day, finishTime, startTime) {
   return `${(dayDiff ? `${dayDiff}D ` : '') + (hourDiff ? `${hourDiff}H ` : '') + (minuteDiff ? `${minuteDiff}M` : '')}`;
 }
 
-export {humanizeTravelDate, toEditTime, subtractDates};
+function getWeightForNullProperty(propertyA, propertyB) {
+  if (propertyA === null && propertyB === null) {
+    return 0;
+  }
+
+  if (propertyA === null) {
+    return 1;
+  }
+
+  if (propertyB === null) {
+    return -1;
+  }
+
+  return null;
+}
+
+function sortPointByDay(pointA, pointB) {
+  const weight = getWeightForNullProperty(pointA, pointB);
+  return weight ?? dayjs(pointA[0].day).diff(dayjs(pointB[0].day));
+}
+
+function sortPointByTime(pointA, pointB) {
+  const weight = getWeightForNullProperty(pointA, pointB);
+  return weight ?? dayjs(`2024-02-10T${pointA[0].startTime}`).diff(dayjs(`2024-02-10T${pointB[0].startTime}`));
+}
+
+function sortPointByPrice(pointA, pointB) {
+  const weight = getWeightForNullProperty(pointA, pointB);
+  return weight ?? pointA[0].price - pointB[0].price;
+}
+
+export {humanizeTravelDate, toEditTime, subtractDates, sortPointByDay, sortPointByTime, sortPointByPrice};
