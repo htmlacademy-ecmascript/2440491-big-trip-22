@@ -1,10 +1,12 @@
 import SortView from '../view/form-sort-view.js';
-import { render } from '../framework/render.js';
+import { RenderPosition, render, remove } from '../framework/render.js';
 import PointPresenter from './point-presenter.js';
 import NoPointView from '../view/no-point-view.js';
 import FilterView from '../view/form-filter-view.js';
 import PointListView from '../view/points-list-view.js';
 import { updateItem } from '../util/common.js';
+import { sortPointByDay, sortPointByPrice, sortPointByTime } from '../util/point.js';
+import { SortType } from '../const.js';
 
 export default class TravelPresenter {
   #siteMain = document.querySelector('.trip-events');
@@ -20,6 +22,8 @@ export default class TravelPresenter {
 
   #travelEvents = [];
   #pointPresenters = new Map();
+  #currentSortType = SortType.DEFAULT;
+  #sourcedTravelEvents = [];
 
   constructor(eventModel) {
     this.#eventModel = eventModel;
@@ -28,7 +32,8 @@ export default class TravelPresenter {
   init() {
     render(this.#pointListView, this.#siteMain);
     render(this.#filterView, this.#filterSection);
-    this.#travelEvents = [...this.#eventModel.getEvents()];
+    this.#travelEvents = [...this.#eventModel.events];
+    this.#sourcedTravelEvents = [...this.#eventModel.events];
     this.#travelContainer = document.querySelector('.trip-events__list');
     this.#renderList();
   }
@@ -45,12 +50,16 @@ export default class TravelPresenter {
 
   #renderSort() {
     this.#sortComponent = new SortView({
-      onSortTypeChange: this.#handleSortTypeChange()
+      sortType: this.#currentSortType,
+      onSortTypeChange: this.#handleSortTypeChange
     });
+
+    render(this.#sortComponent, this.#siteMain, RenderPosition.AFTERBEGIN);
   }
 
   #handlePointChange = (updatedPoint) => {
     this.#travelEvents = updateItem(this.#travelEvents, updatedPoint);
+    this.#sourcedTravelEvents = updateItem(this.#sourcedTravelEvents, updatedPoint);
     this.#pointPresenters.get(updatedPoint[0].id).init(updatedPoint);
   };
 
@@ -76,7 +85,37 @@ export default class TravelPresenter {
     this.#pointPresenters.set(point[0].id, pointPresenter);
   }
 
-  #handleSortTypeChange = () => {
+  #sortPoints(sortType) {
+    switch (sortType) {
+      case SortType.DAY:
+        this.#travelEvents.sort(sortPointByDay);
+        break;
+      case SortType.PRICE:
+        this.#travelEvents.sort(sortPointByPrice);
+        break;
+      case SortType.TIME:
+        this.#travelEvents.sort(sortPointByTime);
+        break;
+      default:
+        this.#travelEvents = [...this.#sourcedTravelEvents];
+    }
 
+    this.#currentSortType = sortType;
+  }
+
+  #clearList() {
+    this.#pointPresenters.forEach((el) => el.destroy());
+  }
+
+  #handleSortTypeChange = (sortType) => {
+    if (this.#currentSortType === sortType) {
+      return;
+    }
+    this.#currentSortType = sortType;
+    remove(this.#sortComponent);
+    this.#renderSort();
+    this.#sortPoints(sortType);
+    this.#clearList();
+    this.#renderPoints();
   };
 }

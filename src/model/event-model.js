@@ -14,9 +14,9 @@ export default class EventModel {
     return [currentEvent, mockOffers];
   };
 
-  events = Array.from({length: EVENT_COUNT}, this.createEventModel);
+  #events = Array.from({length: EVENT_COUNT}, this.createEventModel);
 
-  getEvents() {
-    return this.events;
+  get events() {
+    return this.#events;
   }
 }
